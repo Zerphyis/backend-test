@@ -1,5 +1,4 @@
 package dev.Zerphyis.ParkTest.Domain.Entity;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
