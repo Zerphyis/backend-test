@@ -3,7 +3,7 @@ package dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record EntryVehicle(
+public record PlateVehicle(
 
         @NotBlank
         @Pattern(
