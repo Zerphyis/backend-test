@@ -1,42 +1,89 @@
 package dev.Zerphyis.ParkTest.Domain.Entity;
+
+
+import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
+import dev.Zerphyis.ParkTest.Infra.Exceptions.PlateNotFound;
+
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class VehicleDomain {
 
     private final String plate;
-    private final LocalDateTime entry;
+    private TypesVehicles type;
 
+    private LocalDateTime entry;
     private LocalDateTime exit;
+
+    private Duration accumulatedTime;
     private BigDecimal pending;
 
-    public VehicleDomain(String plate) {
-        this.plate = plate.toUpperCase();
-        this.entry = LocalDateTime.now();
+    public VehicleDomain(String plate, TypesVehicles type) {
+        this.plate = Objects.requireNonNull(plate).toUpperCase();
+        this.type = Objects.requireNonNull(type);
+        this.accumulatedTime = Duration.ZERO;
         this.pending = BigDecimal.ZERO;
     }
 
-    public String getPlate() {
-        return plate;
+    public VehicleDomain(String plate,
+                         TypesVehicles type,
+                         LocalDateTime entry,
+                         LocalDateTime exit,
+                         Duration accumulatedTime,
+                         BigDecimal pending) {
+        this(plate, type);
+        this.entry = entry;
+        this.exit = exit;
+        this.accumulatedTime = accumulatedTime == null ? Duration.ZERO : accumulatedTime;
+        this.pending = pending == null ? BigDecimal.ZERO : pending;
     }
 
-    public LocalDateTime getEntry() {
-        return entry;
+
+    public void assertNotInside() {
+        if (this.entry != null && this.exit == null) {
+            throw new PlateNotFound("Veículo já tem entrada registrada.");
+        }
     }
 
-    public LocalDateTime getExit() {
-        return exit;
+    public void assertHasEntry() {
+        if (this.entry == null) {
+            throw new PlateNotFound("Não existe entrada registrada.");
+        }
     }
 
-    public BigDecimal getPending() {
-        return pending;
+    public void markEntryNow() {
+        this.entry = LocalDateTime.now();
+        this.exit = null;
     }
 
-    public void registerExit() {
+    public void markExitNow() {
         this.exit = LocalDateTime.now();
     }
 
-    public void updatePending(BigDecimal value) {
-        this.pending = value;
+    public Duration currentVisitDuration() {
+        if (this.entry == null) return Duration.ZERO;
+        LocalDateTime stop = (this.exit != null) ? this.exit : LocalDateTime.now();
+        return Duration.between(this.entry, stop);
     }
+
+    public void addAccumulated(Duration d) {
+        if (d == null) return;
+        this.accumulatedTime = this.accumulatedTime.plus(d);
+    }
+
+    public void resetAccumulatedTime() { this.accumulatedTime = Duration.ZERO; }
+
+    public void clearEntryExit() { this.entry = null; this.exit = null; }
+
+    public void setPending(BigDecimal pending) { this.pending = pending == null ? BigDecimal.ZERO : pending; }
+
+    public String getPlate() { return plate; }
+    public LocalDateTime getEntry() { return entry; }
+    public LocalDateTime getExit() { return exit; }
+    public Duration getAccumulatedTime() { return accumulatedTime; }
+    public BigDecimal getPending() { return pending; }
+    public TypesVehicles getType() { return type; }
+    public void setType(TypesVehicles t) { this.type = t; }
 }
