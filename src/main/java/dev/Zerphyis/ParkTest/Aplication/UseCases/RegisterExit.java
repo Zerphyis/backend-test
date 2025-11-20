@@ -4,15 +4,14 @@ import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
 
-public class RegisterEntry {
-
+public class RegisterExit {
     private final VehicleRepository repository;
 
-    public RegisterEntry(VehicleRepository repository) {
+    public RegisterExit(VehicleRepository repository) {
         this.repository = repository;
     }
 
     public VehicleDomain execute(PlateVehicle plate) {
-        return repository.registerEntry(plate);
+        return repository.registerExit(plate);
     }
 }

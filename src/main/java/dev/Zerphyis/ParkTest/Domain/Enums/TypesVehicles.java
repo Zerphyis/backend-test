@@ -1,4 +1,4 @@
-package dev.Zerphyis.ParkTest.Infra.EntityCore.TypeVehicle;
+package dev.Zerphyis.ParkTest.Domain.Enums;
 
 public enum TypesVehicles {
     VEHICLES,

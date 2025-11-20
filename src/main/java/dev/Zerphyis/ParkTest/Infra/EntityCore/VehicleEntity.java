@@ -1,44 +1,62 @@
-    package dev.Zerphyis.ParkTest.Infra.EntityCore;
+package dev.Zerphyis.ParkTest.Infra.EntityCore;
 
-    import dev.Zerphyis.ParkTest.Infra.EntityCore.TypeVehicle.TypesVehicles;
-    import jakarta.persistence.*;
-    import jakarta.validation.constraints.NotBlank;
-    import jakarta.validation.constraints.Pattern;
-    import lombok.AllArgsConstructor;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
+import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
+import jakarta.persistence.*;
+import lombok.*;
 
-    import java.math.BigDecimal;
-    import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    public class VehicleEntity {
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Id
-        private  Long id;
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "vehicles")
+public class VehicleEntity {
 
-        @NotBlank
-        @Pattern(
-                regexp = "^[A-Z]{3}[0-9][A-Z][0-9]{2}$|^[A-Z]{3}-?[0-9]{4}$",
-                message = "Placa inválida. Use padrão antigo (AAA-1234) ou Mercosul (AAA1A23)."
-        )
-        private String plate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        private LocalDateTime entry;
-        private LocalDateTime exit;
-        private BigDecimal pending;
+    private String plate;
 
-        @Enumerated(EnumType.STRING)
-        private TypesVehicles typesVehicles;
+    private LocalDateTime entry;
+    private LocalDateTime exit;
 
-        public VehicleEntity(String plate) {
-            this.plate = plate.toUpperCase();
-            this.entry = LocalDateTime.now();
-            this.pending = BigDecimal.ZERO;
+    private Long accumulatedTimeSeconds;
 
-        }
+    private BigDecimal pending;
+
+    @Enumerated(EnumType.STRING)
+    private TypesVehicles type;
+
+    public Duration getAccumulatedTime() {
+        return accumulatedTimeSeconds == null ? Duration.ZERO : Duration.ofSeconds(accumulatedTimeSeconds);
     }
+
+    public void setAccumulatedTime(Duration d) {
+        this.accumulatedTimeSeconds = d == null ? 0L : d.getSeconds();
+    }
+
+    public long getAccumulatedTimeSecondsSafe() {
+        return accumulatedTimeSeconds == null ? 0L : accumulatedTimeSeconds;
+    }
+
+    public void setAccumulatedTimeSeconds(Long seconds) {
+        this.accumulatedTimeSeconds = seconds == null ? 0L : seconds;
+    }
+
+    public BigDecimal getPendingSafe() {
+        return pending == null ? BigDecimal.ZERO : pending;
+    }
+
+    public void setPendingSafe(BigDecimal p) {
+        this.pending = p == null ? BigDecimal.ZERO : p;
+    }
+
+    public void normalizePlate() {
+        if (this.plate != null) this.plate = this.plate.toUpperCase();
+    }
+}
