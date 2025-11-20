@@ -12,7 +12,7 @@ public class RegisterEntry {
         this.repository = repository;
     }
 
-    public VehicleDomain execute(PlateVehicle entry){
-        return repository.registerEntry(entry);
+    public VehicleDomain execute(PlateVehicle plate) {
+        return repository.registerEntry(plate);
     }
 }
