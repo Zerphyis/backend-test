@@ -2,7 +2,7 @@ package dev.Zerphyis.ParkTest.Domain.Entity;
 
 
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
-import dev.Zerphyis.ParkTest.Infra.Exceptions.PlateNotFound;
+import dev.Zerphyis.ParkTest.Infra.Exceptions.VehiclePlateNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -43,13 +43,13 @@ public class VehicleDomain {
 
     public void assertNotInside() {
         if (this.entry != null && this.exit == null) {
-            throw new PlateNotFound("Veículo já tem entrada registrada.");
+            throw new VehiclePlateNotFoundException("Veículo já tem entrada registrada.");
         }
     }
 
     public void assertHasEntry() {
         if (this.entry == null) {
-            throw new PlateNotFound("Não existe entrada registrada.");
+            throw new VehiclePlateNotFoundException("Não existe entrada registrada.");
         }
     }
 

@@ -10,23 +10,7 @@ public interface VehicleRepository {
 
     Optional<VehicleDomain> findByPlate(String plate);
 
-    List<VehicleDomain> findAll();
+    List<VehicleDomain> findAll(int page);
 
     VehicleDomain save(VehicleDomain vehicle);
-
-    VehicleDomain update(VehicleDomain vehicle);
-
-
-    VehicleDomain registerEntry(PlateVehicle plate);
-
-    VehicleDomain registerExit(PlateVehicle plate);
-
-    VehicleDomain addOfficial(PlateVehicle plate);
-    VehicleDomain addResident(PlateVehicle plate);
-
-    void startMonth();
-
-    void generateResidentPayments(String filename);
-
-    void deleteAllStaysOfOfficialVehicles();
 }

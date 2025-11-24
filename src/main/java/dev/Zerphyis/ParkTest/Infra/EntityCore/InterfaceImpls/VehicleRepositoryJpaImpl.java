@@ -1,7 +1,7 @@
 package dev.Zerphyis.ParkTest.Infra.EntityCore.InterfaceImpls;
 
-import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.Entity.Mapper.VehicleMapper;
+import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
@@ -19,32 +19,23 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
         this.jpa = jpa;
     }
 
+
     @Override
     public Optional<VehicleDomain> findByPlate(String plate) {
-        return jpa.findByPlate(plate).map(VehicleMapper::toDomain);
+        return jpa.findByPlate(plate)
+                .map(VehicleMapper::toDomain);
     }
 
     @Override
-    public VehicleDomain save(VehicleDomain vehicle) {
-        VehicleEntity entity = VehicleMapper.toEntity(vehicle);
-        return VehicleMapper.toDomain(jpa.save(entity));
-    }
-
-    @Override
-    public VehicleDomain update(VehicleDomain vehicle) {
-        VehicleEntity entity = VehicleMapper.toEntity(vehicle);
-        return VehicleMapper.toDomain(jpa.save(entity));
-    }
-
-    @Override
-    public List<VehicleDomain> findAll() {
+    public List<VehicleDomain> findAll(int page) {
         return jpa.findAll().stream()
                 .map(VehicleMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public void deleteAllStaysOfOfficialVehicles() {
-        jpa.deleteAllStaysOfOfficialVehicles();
+    public VehicleDomain save(VehicleDomain vehicle) {
+        VehicleEntity entity = VehicleMapper.toEntity(vehicle);
+        return VehicleMapper.toDomain(jpa.save(entity));
     }
 }
