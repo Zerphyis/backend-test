@@ -1,16 +1,27 @@
 package dev.Zerphyis.ParkTest.Aplication.UseCases;
 
+import dev.Zerphyis.ParkTest.Aplication.Service.VehicleValidation;
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
+import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
 
 public class AddOfficialVehicle {
+
     private final VehicleRepository repository;
+    private final VehicleValidation validator;
 
     public AddOfficialVehicle(VehicleRepository repository) {
         this.repository = repository;
+        this.validator = new VehicleValidation(repository);
     }
-    public VehicleDomain execute(PlateVehicle plate){
-        return  repository.addOfficial(plate);
+
+    public VehicleDomain execute(PlateVehicle plate) {
+
+        validator.assertPlateNotExists(plate.plate());
+
+        VehicleDomain domain = new VehicleDomain(plate.plate(), TypesVehicles.OFFICIAL);
+
+        return repository.save(domain);
     }
 }
