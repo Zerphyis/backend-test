@@ -1,7 +1,7 @@
 package dev.Zerphyis.ParkTest.Domain.Enums;
 
 public enum TypesVehicles {
-    VEHICLES,
+    OFFICIAL,
     RESIDENTS,
     NORESIDENTS
 }
