@@ -11,6 +11,6 @@ public interface VehicleRepositoryJpa extends JpaRepository<VehicleEntity,Long> 
     Optional<VehicleEntity> findByPlate(String plate);
 
     @Modifying
-    @Query("UPDATE VehicleEntity v SET v.totalStays = 0 WHERE v.type = 'VEHICLES'")
+    @Query("UPDATE VehicleEntity v SET v.totalStays = 0 WHERE v.type = 'OFFICIAL'")
     void deleteAllStaysOfOfficialVehicles();
 }
