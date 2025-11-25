@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class StartMonth {
+
     private final VehicleRepository repository;
 
     public StartMonth(VehicleRepository repository) {
@@ -22,5 +23,4 @@ public class StartMonth {
             repository.save(v);
         }
     }
-
 }
