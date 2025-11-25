@@ -18,10 +18,10 @@ public class AddOfficialVehicle {
 
     public VehicleDomain execute(PlateVehicle plate) {
 
-        validator.assertPlateNotExists(plate.plate());
+        String plateStr = plate.plate().toUpperCase();
+        validator.assertPlateNotExists(plateStr);
 
-        VehicleDomain domain = new VehicleDomain(plate.plate(), TypesVehicles.OFFICIAL);
-
+        VehicleDomain domain = new VehicleDomain(plateStr, TypesVehicles.OFFICIAL);
         return repository.save(domain);
     }
 }

@@ -15,7 +15,9 @@ public class RegisterEntry {
 
     public VehicleDomain execute(PlateVehicle plateDto) {
         String plate = plateDto.plate().toUpperCase();
-        VehicleDomain vehicle =repository.findByPlate(plate).orElseThrow(() -> new VehiclePlateNotFoundException("Veículo não encontrado"));
+
+        VehicleDomain vehicle = repository.findByPlate(plate)
+                .orElseThrow(() -> new VehiclePlateNotFoundException("Veículo não encontrado"));
 
         vehicle.assertNotInside();
         vehicle.markEntryNow();

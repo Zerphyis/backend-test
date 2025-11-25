@@ -19,7 +19,6 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
         this.jpa = jpa;
     }
 
-
     @Override
     public Optional<VehicleDomain> findByPlate(String plate) {
         return jpa.findByPlate(plate)

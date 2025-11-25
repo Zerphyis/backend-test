@@ -8,6 +8,7 @@ import dev.Zerphyis.ParkTest.Infra.Exceptions.VehiclePlateNotFoundException;
 import java.time.Duration;
 
 public class RegisterExit {
+
     private final VehicleRepository repository;
 
     public RegisterExit(VehicleRepository repository) {
@@ -15,12 +16,13 @@ public class RegisterExit {
     }
 
     public VehicleDomain execute(PlateVehicle plateDto) {
-        String plate= plateDto.plate();
-        VehicleDomain vehicle= repository.findByPlate(plate).orElseThrow(() -> new VehiclePlateNotFoundException("Veiculo Não encontrado"));
+        String plate = plateDto.plate().toUpperCase();
+
+        VehicleDomain vehicle = repository.findByPlate(plate)
+                .orElseThrow(() -> new VehiclePlateNotFoundException("Veículo não encontrado"));
 
         vehicle.assertHasEntry();
         vehicle.markExitNow();
-
 
         Duration visit = vehicle.currentVisitDuration();
         vehicle.addAccumulated(visit);
