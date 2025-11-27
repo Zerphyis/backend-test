@@ -13,5 +13,5 @@ public interface VehicleRepository {
 
     VehicleDomain save(VehicleDomain vehicle);
 
-
+    void resetOfficialVehiclesMonth();
 }
