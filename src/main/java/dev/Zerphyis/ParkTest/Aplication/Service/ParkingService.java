@@ -10,15 +10,15 @@ import java.util.Optional;
 
 public class ParkingService {
 
-    private final RegisterEntry registerEntry;
-    private final RegisterExit registerExit;
-    private final AddOfficialVehicle addOfficialVehicle;
-    private final AddResidentVehicle addResidentVehicle;
-    private final StartMonth startMonth;
-    private final FindAllVehicles findAllVehicles;
-    private final FindVehiclesByTypes findVehiclesByTypes;
-    private final FindVehicleByPlate findVehicleByPlate;
-    private final GenerateResidentPaymentsReport generateReport;
+    private final RegisterEntry registerEntryUseCase;
+    private final RegisterExit registerExitUseCase;
+    private final AddOfficialVehicle addOfficialVehicleUseCase;
+    private final AddResidentVehicle addResidentVehicleUseCase;
+    private final StartMonth startMonthUseCase;
+    private final FindAllVehicles findAllVehiclesUseCase;
+    private final FindVehiclesByTypes findVehiclesByTypesUseCase;
+    private final FindVehicleByPlate findVehicleByPlateUseCase;
+    private final GenerateResidentPaymentsReport generateReportUseCase;
 
     public ParkingService(
             RegisterEntry registerEntry,
@@ -31,50 +31,50 @@ public class ParkingService {
             FindVehicleByPlate findVehicleByPlate,
             GenerateResidentPaymentsReport generateReport
     ) {
-        this.registerEntry = registerEntry;
-        this.registerExit = registerExit;
-        this.addOfficialVehicle = addOfficialVehicle;
-        this.addResidentVehicle = addResidentVehicle;
-        this.startMonth = startMonth;
-        this.findAllVehicles = findAllVehicles;
-        this.findVehiclesByTypes = findVehiclesByTypes;
-        this.findVehicleByPlate = findVehicleByPlate;
-        this.generateReport = generateReport;
+        this.registerEntryUseCase = registerEntry;
+        this.registerExitUseCase = registerExit;
+        this.addOfficialVehicleUseCase = addOfficialVehicle;
+        this.addResidentVehicleUseCase = addResidentVehicle;
+        this.startMonthUseCase = startMonth;
+        this.findAllVehiclesUseCase = findAllVehicles;
+        this.findVehiclesByTypesUseCase = findVehiclesByTypes;
+        this.findVehicleByPlateUseCase = findVehicleByPlate;
+        this.generateReportUseCase = generateReport;
     }
 
     public VehicleDomain registerEntry(PlateVehicle plate) {
-        return registerEntry.execute(plate);
+        return registerEntryUseCase.execute(plate);
     }
 
     public VehicleDomain registerExit(PlateVehicle plate) {
-        return registerExit.execute(plate);
+        return registerExitUseCase.execute(plate);
     }
 
     public VehicleDomain addResident(PlateVehicle plate) {
-        return addResidentVehicle.execute(plate);
+        return addResidentVehicleUseCase.execute(plate);
     }
 
     public VehicleDomain addOfficial(PlateVehicle plate) {
-        return addOfficialVehicle.execute(plate);
+        return addOfficialVehicleUseCase.execute(plate);
     }
 
     public void startNewMonth() {
-        startMonth.execute();
+        startMonthUseCase.execute();
     }
 
     public void generateResidentReport(String filename) {
-        generateReport.execute(filename);
+        generateReportUseCase.execute(filename);
     }
 
     public List<VehicleDomain> getAllVehicles(int page) {
-        return findAllVehicles.execute(page);
+        return findAllVehiclesUseCase.execute(page);
     }
 
     public Optional<VehicleDomain> getVehicleByPlate(String plate) {
-        return findVehicleByPlate.execute(plate);
+        return findVehicleByPlateUseCase.execute(plate);
     }
 
     public List<VehicleDomain> getVehiclesByType(TypesVehicles type) {
-        return findVehiclesByTypes.execute(type);
+        return findVehiclesByTypesUseCase.execute(type);
     }
 }

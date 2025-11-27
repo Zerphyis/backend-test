@@ -24,7 +24,7 @@ public class VehicleMapper {
                 e.getPlate() == null ? "" : e.getPlate(),
                 type,
                 e.getEntry(),
-                e.getExit(),
+                e.getExit(), // idem aqui
                 e.getAccumulatedTime(),
                 e.getPendingSafe()
         );

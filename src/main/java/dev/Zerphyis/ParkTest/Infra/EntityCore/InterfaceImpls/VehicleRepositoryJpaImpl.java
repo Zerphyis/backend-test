@@ -5,6 +5,7 @@ import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
 
     private final VehicleRepositoryJpa jpa;
 
-    public VehicleRepositoryJpaImpl(VehicleRepositoryJpa jpa) {
+    public VehicleRepositoryJpaImpl(@Lazy VehicleRepositoryJpa jpa) {
         this.jpa = jpa;
     }
 
@@ -36,5 +37,10 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
     public VehicleDomain save(VehicleDomain vehicle) {
         VehicleEntity entity = VehicleMapper.toEntity(vehicle);
         return VehicleMapper.toDomain(jpa.save(entity));
+    }
+
+    @Override
+    public void resetOfficialVehiclesMonth() {
+        jpa.resetOfficialVehiclesMonth();
     }
 }

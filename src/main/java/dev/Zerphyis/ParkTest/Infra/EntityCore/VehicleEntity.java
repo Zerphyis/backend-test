@@ -20,9 +20,12 @@ public class VehicleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String plate;
 
     private LocalDateTime entry;
+
+    @Column(name = "exit_time")
     private LocalDateTime exit;
 
     private Long accumulatedTimeSeconds;
@@ -57,6 +60,7 @@ public class VehicleEntity {
     }
 
     public void normalizePlate() {
-        if (this.plate != null) this.plate = this.plate.toUpperCase();
+        if (this.plate != null)
+            this.plate = this.plate.toUpperCase();
     }
 }
