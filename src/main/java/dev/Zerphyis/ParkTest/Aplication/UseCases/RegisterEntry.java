@@ -1,9 +1,9 @@
 package dev.Zerphyis.ParkTest.Aplication.UseCases;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
+import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
-import dev.Zerphyis.ParkTest.Infra.Exceptions.VehiclePlateNotFoundException;
 
 public class RegisterEntry {
 
@@ -17,7 +17,8 @@ public class RegisterEntry {
         String plate = plateDto.plate().toUpperCase();
 
         VehicleDomain vehicle = repository.findByPlate(plate)
-                .orElseThrow(() -> new VehiclePlateNotFoundException("Veículo não encontrado"));
+
+                .orElseGet(() -> new VehicleDomain(plate, TypesVehicles.NORESIDENTS));
 
         vehicle.assertNotInside();
         vehicle.markEntryNow();
