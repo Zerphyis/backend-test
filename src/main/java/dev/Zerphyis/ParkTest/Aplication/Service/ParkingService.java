@@ -3,7 +3,9 @@ package dev.Zerphyis.ParkTest.Aplication.Service;
 import dev.Zerphyis.ParkTest.Aplication.UseCases.*;
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
+import dev.Zerphyis.ParkTest.Domain.Enums.CurrencyType;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,18 +65,18 @@ public class ParkingService {
     }
 
     public void generateResidentReport(String filename) {
-        generateReportUseCase.execute(filename);
+        generateReportUseCase.execute(filename, CurrencyType.BRL);
     }
 
-    public List<VehicleDomain> getAllVehicles(int page) {
-        return findAllVehiclesUseCase.execute(page);
+    public Page<VehicleDomain> getAllVehicles(int page, int size) {
+        return findAllVehiclesUseCase.execute(page, size);
     }
 
     public Optional<VehicleDomain> getVehicleByPlate(String plate) {
         return findVehicleByPlateUseCase.execute(plate);
     }
 
-    public List<VehicleDomain> getVehiclesByType(TypesVehicles type) {
-        return findVehiclesByTypesUseCase.execute(type);
+    public Page<VehicleDomain> getVehiclesByType(TypesVehicles type, int page, int size) {
+        return findVehiclesByTypesUseCase.execute(type, page, size);
     }
 }
