@@ -59,6 +59,10 @@ public class VehicleEntity {
         this.pending = p == null ? BigDecimal.ZERO : p;
     }
 
+    public void setPending(BigDecimal p) {
+        this.pending = p == null ? BigDecimal.ZERO : p;
+    }
+
     public void normalizePlate() {
         if (this.plate != null)
             this.plate = this.plate.toUpperCase();
