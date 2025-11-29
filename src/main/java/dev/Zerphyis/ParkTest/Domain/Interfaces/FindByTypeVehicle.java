@@ -2,9 +2,9 @@ package dev.Zerphyis.ParkTest.Domain.Interfaces;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface FindByTypeVehicle {
-    List<VehicleDomain> execute(TypesVehicles type);
+    Page<VehicleDomain> execute(TypesVehicles type, int page, int size);
 }
