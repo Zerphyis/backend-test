@@ -1,6 +1,5 @@
 package dev.Zerphyis.ParkTest.Domain.Entity;
 
-
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Infra.Exceptions.VehiclePlateNotFoundException;
 
@@ -23,9 +22,12 @@ public class VehicleDomain {
     public VehicleDomain(String plate, TypesVehicles type) {
         this.plate = Objects.requireNonNull(plate).toUpperCase();
         this.type = Objects.requireNonNull(type);
+        this.entry = null;
+        this.exit = null;
         this.accumulatedTime = Duration.ZERO;
         this.pending = BigDecimal.ZERO;
     }
+
 
     public VehicleDomain(String plate,
                          TypesVehicles type,
@@ -33,13 +35,16 @@ public class VehicleDomain {
                          LocalDateTime exit,
                          Duration accumulatedTime,
                          BigDecimal pending) {
-        this(plate, type);
+
+        this.plate = Objects.requireNonNull(plate).toUpperCase();
+        this.type = Objects.requireNonNull(type);
+
         this.entry = entry;
         this.exit = exit;
+
         this.accumulatedTime = accumulatedTime == null ? Duration.ZERO : accumulatedTime;
         this.pending = pending == null ? BigDecimal.ZERO : pending;
     }
-
 
     public void assertNotInside() {
         if (this.entry != null && this.exit == null) {
@@ -69,15 +74,23 @@ public class VehicleDomain {
     }
 
     public void addAccumulated(Duration d) {
-        if (d == null) return;
-        this.accumulatedTime = this.accumulatedTime.plus(d);
+        if (d != null) {
+            this.accumulatedTime = this.accumulatedTime.plus(d);
+        }
     }
 
-    public void resetAccumulatedTime() { this.accumulatedTime = Duration.ZERO; }
+    public void resetAccumulatedTime() {
+        this.accumulatedTime = Duration.ZERO;
+    }
 
-    public void clearEntryExit() { this.entry = null; this.exit = null; }
+    public void clearEntryExit() {
+        this.entry = null;
+        this.exit = null;
+    }
 
-    public void setPending(BigDecimal pending) { this.pending = pending == null ? BigDecimal.ZERO : pending; }
+    public void setPending(BigDecimal pending) {
+        this.pending = pending == null ? BigDecimal.ZERO : pending;
+    }
 
     public String getPlate() { return plate; }
     public LocalDateTime getEntry() { return entry; }
@@ -85,5 +98,8 @@ public class VehicleDomain {
     public Duration getAccumulatedTime() { return accumulatedTime; }
     public BigDecimal getPending() { return pending; }
     public TypesVehicles getType() { return type; }
-    public void setType(TypesVehicles t) { this.type = t; }
+
+    public void setType(TypesVehicles t) {
+        this.type = t;
+    }
 }

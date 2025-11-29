@@ -4,6 +4,8 @@ import dev.Zerphyis.ParkTest.Aplication.Service.ParkingService;
 import dev.Zerphyis.ParkTest.Aplication.UseCases.*;
 import dev.Zerphyis.ParkTest.Domain.Interfaces.ResidentPaymentRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
+import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
+import dev.Zerphyis.ParkTest.Infra.EntityCore.InterfaceImpls.VehicleRepositoryJpaImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +25,11 @@ public class UsesCasesConfigs {
     @Bean
     public StartMonth startMonth(VehicleRepository repository) {
         return new StartMonth(repository);
+    }
+
+    @Bean
+    VehicleRepositoryJpaImpl repositoryJpa(VehicleRepositoryJpa repositoryJpa){
+        return  new VehicleRepositoryJpaImpl(repositoryJpa);
     }
 
     @Bean

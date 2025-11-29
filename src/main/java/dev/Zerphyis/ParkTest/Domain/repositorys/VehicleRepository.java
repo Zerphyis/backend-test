@@ -1,15 +1,15 @@
 package dev.Zerphyis.ParkTest.Domain.repositorys;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface VehicleRepository {
 
     Optional<VehicleDomain> findByPlate(String plate);
 
-    List<VehicleDomain> findAll(int page);
+    Page<VehicleDomain> findAll(int page, int size);
 
     VehicleDomain save(VehicleDomain vehicle);
 
