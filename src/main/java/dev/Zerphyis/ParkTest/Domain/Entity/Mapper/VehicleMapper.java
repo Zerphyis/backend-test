@@ -14,20 +14,21 @@ public class VehicleMapper {
         e.setEntry(d.getEntry());
         e.setExit(d.getExit());
         e.setAccumulatedTime(d.getAccumulatedTime());
-        e.setPending(d.getPending());
+
+        e.setPendingSafe(d.getPending());
+
         return e;
     }
 
     public static VehicleDomain toDomain(VehicleEntity e) {
         TypesVehicles type = e.getType() == null ? TypesVehicles.NORESIDENTS : e.getType();
-        VehicleDomain d = new VehicleDomain(
+        return new VehicleDomain(
                 e.getPlate() == null ? "" : e.getPlate(),
                 type,
                 e.getEntry(),
-                e.getExit(), // idem aqui
+                e.getExit(),
                 e.getAccumulatedTime(),
                 e.getPendingSafe()
         );
-        return d;
     }
 }
