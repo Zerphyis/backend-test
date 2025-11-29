@@ -4,6 +4,9 @@ import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.Interfaces.FindByTypeVehicle;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -16,9 +19,16 @@ public class FindVehiclesByTypes implements FindByTypeVehicle {
     }
 
     @Override
-    public List<VehicleDomain> execute(TypesVehicles type) {
-        return repository.findAll(0).stream()
-                .filter(vehicle -> vehicle.getType() == type)
+    public Page<VehicleDomain> execute(TypesVehicles type, int page, int size) {
+
+        Page<VehicleDomain> fullPage = repository.findAll(page, size);
+
+        List<VehicleDomain> filtered = fullPage.getContent().stream()
+                .filter(v -> v.getType() == type)
                 .toList();
+
+        return new PageImpl<>(filtered, PageRequest.of(page, size), filtered.size());
     }
+
+
 }
