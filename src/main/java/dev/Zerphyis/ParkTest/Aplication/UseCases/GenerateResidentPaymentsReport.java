@@ -5,9 +5,10 @@ import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.Enums.CurrencyType;
 import dev.Zerphyis.ParkTest.Domain.Interfaces.ResidentPaymentRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
+import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GenerateResidentPaymentsReport {
 
@@ -22,13 +23,25 @@ public class GenerateResidentPaymentsReport {
         this.residentPaymentRepository = residentPaymentRepository;
     }
 
-    public void execute(String filename) {
+    public void execute(String filename, CurrencyType currency) {
 
-        CurrencyType currency = askCurrencyType();
+        int page = 0;
+        int size = 50;
 
-        List<VehicleDomain> residents = vehicleRepository.findAll(0).stream()
-                .filter(v -> v.getType() == TypesVehicles.RESIDENTS)
-                .toList();
+        List<VehicleDomain> residents = new ArrayList<>();
+
+        Page<VehicleDomain> result;
+
+        do {
+            result = vehicleRepository.findAll(page, size);
+            result.getContent().stream()
+                    .filter(v -> v.getType() == TypesVehicles.RESIDENTS)
+                    .forEach(residents::add);
+
+            page++;
+
+        } while (!result.isLast());
+
 
         StringBuilder report = new StringBuilder();
         report.append("Relatório de Pagamentos dos Residentes\n");
@@ -42,24 +55,5 @@ public class GenerateResidentPaymentsReport {
         }
 
         residentPaymentRepository.saveMonthlyReport(filename, report.toString());
-    }
-
-    private CurrencyType askCurrencyType() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Escolha a moeda para o relatório:");
-        for (CurrencyType type : CurrencyType.values()) {
-            System.out.println("- " + type.name());
-        }
-
-        System.out.print("Digite a moeda: ");
-        String input = scanner.nextLine().trim().toUpperCase();
-
-        try {
-            return CurrencyType.valueOf(input);
-        } catch (Exception e) {
-            System.out.println("Moeda inválida. Usando BRL como padrão.");
-            return CurrencyType.BRL;
-        }
     }
 }
