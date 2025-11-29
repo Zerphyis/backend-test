@@ -2,8 +2,7 @@ package dev.Zerphyis.ParkTest.Aplication.UseCases;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public class FindAllVehicles {
 
@@ -13,7 +12,7 @@ public class FindAllVehicles {
         this.repository = repository;
     }
 
-    public List<VehicleDomain> execute(int page) {
-        return repository.findAll(page);
+    public Page<VehicleDomain> execute(int page, int size) {
+        return repository.findAll(page, size);
     }
 }
