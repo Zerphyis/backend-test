@@ -7,7 +7,6 @@ import dev.Zerphyis.ParkTest.Domain.Enums.CurrencyType;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ParkingService {
