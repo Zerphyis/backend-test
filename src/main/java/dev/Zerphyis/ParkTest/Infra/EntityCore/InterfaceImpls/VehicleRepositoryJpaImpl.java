@@ -2,6 +2,7 @@ package dev.Zerphyis.ParkTest.Infra.EntityCore.InterfaceImpls;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.Mapper.VehicleMapper;
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
+import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
@@ -29,6 +30,13 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
     public Page<VehicleDomain> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return jpa.findAll(pageable)
+                .map(VehicleMapper::toDomain);
+    }
+
+    @Override
+    public Page<VehicleDomain> findByType(TypesVehicles type, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return jpa.findByType(type, pageable)
                 .map(VehicleMapper::toDomain);
     }
 
