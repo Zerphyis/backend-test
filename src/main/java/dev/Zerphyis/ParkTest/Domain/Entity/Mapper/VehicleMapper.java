@@ -9,12 +9,10 @@ public class VehicleMapper {
     public static VehicleEntity toEntity(VehicleDomain d) {
         VehicleEntity e = new VehicleEntity();
         e.setPlate(d.getPlate());
-        e.normalizePlate();
         e.setType(d.getType());
         e.setEntry(d.getEntry());
         e.setExit(d.getExit());
         e.setAccumulatedTime(d.getAccumulatedTime());
-
         e.setPendingSafe(d.getPending());
 
         return e;
