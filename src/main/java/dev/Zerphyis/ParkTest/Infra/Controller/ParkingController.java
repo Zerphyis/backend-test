@@ -5,9 +5,11 @@ import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.PlateVehicle;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.Dtos.ResponseVehicle;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
@@ -22,7 +24,6 @@ public class ParkingController {
     private ResponseVehicle toResponseDTO(VehicleDomain domain) {
         return ResponseVehicle.fromDomain(domain);
     }
-
 
     @PostMapping("/entry")
     public ResponseEntity<ResponseVehicle> registerEntry(@RequestBody PlateVehicle plate) {
@@ -44,15 +45,14 @@ public class ParkingController {
         return ResponseEntity.ok(toResponseDTO(parkingService.addOfficial(plate)));
     }
 
-
     @GetMapping("/vehicles")
-    public ResponseEntity<Page<ResponseVehicle>> getAllVehicles(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size
-    ) {
-        Page<VehicleDomain> domainPage = parkingService.getAllVehicles(page, size);
-        Page<ResponseVehicle> dtoPage = domainPage.map(this::toResponseDTO);
-        return ResponseEntity.ok(dtoPage);
+    public ResponseEntity<List<ResponseVehicle>> getAllVehicles() {
+        List<ResponseVehicle> response = parkingService.getAllVehicles()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/vehicles/{plate}")
@@ -64,24 +64,22 @@ public class ParkingController {
     }
 
     @GetMapping("/vehicles/type/{type}")
-    public ResponseEntity<Page<ResponseVehicle>> getByType(
-            @PathVariable TypesVehicles type,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size
-    ) {
-        Page<VehicleDomain> domainPage = parkingService.getVehiclesByType(type, page, size);
-        Page<ResponseVehicle> dtoPage = domainPage.map(this::toResponseDTO);
-        return ResponseEntity.ok(dtoPage);
+    public ResponseEntity<List<ResponseVehicle>> getByType(@PathVariable TypesVehicles type) {
+        List<ResponseVehicle> response = parkingService.getVehiclesByType(type)
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/admin/start-month")
+    @PostMapping("/start-month")
     public ResponseEntity<Void> startNewMonth() {
         parkingService.startNewMonth();
         return ResponseEntity.noContent().build();
     }
 
-
-    @GetMapping("/admin/report")
+    @GetMapping("/report")
     public ResponseEntity<String> generateResidentReport(
             @RequestParam(defaultValue = "resident_payments.txt") String filename
     ) {

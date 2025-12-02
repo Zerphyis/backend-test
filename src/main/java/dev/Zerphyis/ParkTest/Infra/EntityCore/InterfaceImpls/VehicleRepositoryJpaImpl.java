@@ -6,11 +6,11 @@ import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class VehicleRepositoryJpaImpl implements VehicleRepository {
 
@@ -27,22 +27,25 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
     }
 
     @Override
-    public Page<VehicleDomain> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return jpa.findAll(pageable)
-                .map(VehicleMapper::toDomain);
+    public List<VehicleDomain> findAll() {
+        return jpa.findAll()
+                .stream()
+                .map(VehicleMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Page<VehicleDomain> findByType(TypesVehicles type, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return jpa.findByType(type, pageable)
-                .map(VehicleMapper::toDomain);
+    public List<VehicleDomain> findByType(TypesVehicles type) {
+        return jpa.findByType(type)
+                .stream()
+                .map(VehicleMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public VehicleDomain save(VehicleDomain vehicle) {
-        VehicleEntity entity = VehicleMapper.toEntity(vehicle);
+    @Transactional
+    public VehicleDomain save(VehicleDomain domain) {
+        VehicleEntity entity = VehicleMapper.toEntity(domain);
         VehicleEntity saved = jpa.save(entity);
         return VehicleMapper.toDomain(saved);
     }

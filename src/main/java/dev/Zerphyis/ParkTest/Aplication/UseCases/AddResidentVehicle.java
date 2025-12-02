@@ -19,9 +19,14 @@ public class AddResidentVehicle {
     public VehicleDomain execute(PlateVehicle plate) {
 
         String plateStr = plate.plate().toUpperCase();
-        validator.assertPlateNotExists(plateStr);
 
-        VehicleDomain domain = new VehicleDomain(plateStr, TypesVehicles.RESIDENTS);
-        return repository.save(domain);
+        validator.assertPlateNotExists(plateStr, TypesVehicles.RESIDENTS);
+
+        VehicleDomain vehicle = repository.findByPlate(plateStr)
+                .orElseGet(() -> new VehicleDomain(plateStr, TypesVehicles.NORESIDENTS));
+
+        vehicle.setType(TypesVehicles.RESIDENTS);
+
+        return repository.save(vehicle);
     }
 }
