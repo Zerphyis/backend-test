@@ -7,20 +7,27 @@ import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
 public class VehicleMapper {
 
     public static VehicleEntity toEntity(VehicleDomain d) {
+        if (d == null) return null;
+
         VehicleEntity e = new VehicleEntity();
+        e.setId(d.getId());
         e.setPlate(d.getPlate());
         e.setType(d.getType());
         e.setEntry(d.getEntry());
         e.setExit(d.getExit());
         e.setAccumulatedTime(d.getAccumulatedTime());
-        e.setPendingSafe(d.getPending());
+        e.setPending(d.getPending());
 
         return e;
     }
 
     public static VehicleDomain toDomain(VehicleEntity e) {
-        TypesVehicles type = e.getType() == null ? TypesVehicles.NORESIDENTS : e.getType();
+        if (e == null) return null;
+
+        TypesVehicles type = e.getType() != null ? e.getType() : TypesVehicles.NORESIDENTS;
+
         return new VehicleDomain(
+                e.getId(),
                 e.getPlate() == null ? "" : e.getPlate(),
                 type,
                 e.getEntry(),
