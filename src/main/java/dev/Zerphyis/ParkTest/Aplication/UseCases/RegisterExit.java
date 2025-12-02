@@ -22,13 +22,10 @@ public class RegisterExit {
                 .orElseThrow(() -> new VehiclePlateNotFoundException("Veículo não encontrado"));
 
         vehicle.assertHasEntry();
-        vehicle.markExitNow();
 
+        vehicle.markExitNow();
         Duration visit = vehicle.currentVisitDuration();
         vehicle.addAccumulated(visit);
-
-        vehicle.clearEntryExit();
-
         return repository.save(vehicle);
     }
 }
