@@ -2,9 +2,9 @@ package dev.Zerphyis.ParkTest.Aplication.UseCases;
 
 import dev.Zerphyis.ParkTest.Domain.Entity.VehicleDomain;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
-import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class StartMonth {
 
@@ -16,22 +16,12 @@ public class StartMonth {
 
     public void execute() {
 
-        int page = 0;
-        int size = 100;
+        List<VehicleDomain> vehicles = repository.findAll();
 
-        Page<VehicleDomain> result;
-
-        do {
-            result = repository.findAll(page, size);
-
-            for (VehicleDomain v : result.getContent()) {
-                v.resetAccumulatedTime();
-                v.setPending(BigDecimal.ZERO);
-                repository.save(v);
-            }
-
-            page++;
-
-        } while (!result.isLast());
+        for (VehicleDomain v : vehicles) {
+            v.resetAccumulatedTime();
+            v.setPending(BigDecimal.ZERO);
+            repository.save(v);
+        }
     }
 }
