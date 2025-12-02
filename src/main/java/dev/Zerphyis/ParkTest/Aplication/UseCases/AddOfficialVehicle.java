@@ -19,9 +19,15 @@ public class AddOfficialVehicle {
     public VehicleDomain execute(PlateVehicle plate) {
 
         String plateStr = plate.plate().toUpperCase();
-        validator.assertPlateNotExists(plateStr);
 
-        VehicleDomain domain = new VehicleDomain(plateStr, TypesVehicles.OFFICIAL);
-        return repository.save(domain);
+        validator.assertPlateNotExists(plateStr, TypesVehicles.OFFICIAL);
+
+        VehicleDomain vehicle = repository.findByPlate(plateStr)
+                .orElseGet(() -> new VehicleDomain(plateStr, TypesVehicles.NORESIDENTS));
+
+        vehicle.setType(TypesVehicles.OFFICIAL);
+
+        return repository.save(vehicle);
     }
+
 }
