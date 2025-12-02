@@ -5,10 +5,9 @@ import dev.Zerphyis.ParkTest.Domain.Enums.TypesVehicles;
 import dev.Zerphyis.ParkTest.Domain.Enums.CurrencyType;
 import dev.Zerphyis.ParkTest.Domain.Interfaces.ResidentPaymentRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
-import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GenerateResidentPaymentsReport {
 
@@ -25,27 +24,15 @@ public class GenerateResidentPaymentsReport {
 
     public void execute(String filename, CurrencyType currency) {
 
-        int page = 0;
-        int size = 50;
-
-        List<VehicleDomain> residents = new ArrayList<>();
-
-        Page<VehicleDomain> result;
-
-        do {
-            result = vehicleRepository.findAll(page, size);
-            result.getContent().stream()
-                    .filter(v -> v.getType() == TypesVehicles.RESIDENTS)
-                    .forEach(residents::add);
-
-            page++;
-
-        } while (!result.isLast());
-
+        List<VehicleDomain> residents = vehicleRepository.findAll()
+                .stream()
+                .filter(v -> v.getType() == TypesVehicles.RESIDENTS)
+                .collect(Collectors.toList());
 
         StringBuilder report = new StringBuilder();
         report.append("Relatório de Pagamentos dos Residentes\n");
-        report.append("Moeda utilizada: ").append(currency).append(" (").append(currency.symbol()).append(")\n\n");
+        report.append("Moeda utilizada: ").append(currency)
+                .append(" (").append(currency.symbol()).append(")\n\n");
 
         for (VehicleDomain resident : residents) {
             report.append("Placa: ").append(resident.getPlate()).append("\n");
