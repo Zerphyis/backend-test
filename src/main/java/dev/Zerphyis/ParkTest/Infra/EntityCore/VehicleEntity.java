@@ -13,14 +13,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "vehicles")
+@Table(
+        name = "vehicles",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "plate")
+        }
+)
 public class VehicleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String plate;
 
     private LocalDateTime entry;
@@ -35,36 +40,23 @@ public class VehicleEntity {
     @Enumerated(EnumType.STRING)
     private TypesVehicles type;
 
+    @PrePersist
+    @PreUpdate
+    public void normalizePlate() {
+        if (plate != null) {
+            plate = plate.toUpperCase();
+        }
+    }
+
     public Duration getAccumulatedTime() {
         return accumulatedTimeSeconds == null ? Duration.ZERO : Duration.ofSeconds(accumulatedTimeSeconds);
     }
 
     public void setAccumulatedTime(Duration d) {
-        this.accumulatedTimeSeconds = d == null ? 0L : d.getSeconds();
-    }
-
-    public long getAccumulatedTimeSecondsSafe() {
-        return accumulatedTimeSeconds == null ? 0L : accumulatedTimeSeconds;
-    }
-
-    public void setAccumulatedTimeSeconds(Long seconds) {
-        this.accumulatedTimeSeconds = seconds == null ? 0L : seconds;
+        this.accumulatedTimeSeconds = (d == null ? 0 : d.getSeconds());
     }
 
     public BigDecimal getPendingSafe() {
         return pending == null ? BigDecimal.ZERO : pending;
-    }
-
-    public void setPendingSafe(BigDecimal p) {
-        this.pending = p == null ? BigDecimal.ZERO : p;
-    }
-
-    public void setPending(BigDecimal p) {
-        this.pending = p == null ? BigDecimal.ZERO : p;
-    }
-
-    public void normalizePlate() {
-        if (this.plate != null)
-            this.plate = this.plate.toUpperCase();
     }
 }
