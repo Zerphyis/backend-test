@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class VehicleDomain {
 
-    private Long id; // novo campo
+    private Long id;
     private final String plate;
     private TypesVehicles type;
 
@@ -20,7 +20,6 @@ public class VehicleDomain {
     private Duration accumulatedTime;
     private BigDecimal pending;
 
-    // construtor sem ID (para criação de novos veículos)
     public VehicleDomain(String plate, TypesVehicles type) {
         this.id = null;
         this.plate = Objects.requireNonNull(plate).toUpperCase();
@@ -38,6 +37,7 @@ public class VehicleDomain {
                          LocalDateTime exit,
                          Duration accumulatedTime,
                          BigDecimal pending) {
+
         this.id = id;
         this.plate = Objects.requireNonNull(plate).toUpperCase();
         this.type = Objects.requireNonNull(type);
@@ -46,6 +46,7 @@ public class VehicleDomain {
         this.accumulatedTime = accumulatedTime == null ? Duration.ZERO : accumulatedTime;
         this.pending = pending == null ? BigDecimal.ZERO : pending;
     }
+
 
     public void assertNotInside() {
         if (this.entry != null && this.exit == null) {
@@ -59,13 +60,26 @@ public class VehicleDomain {
         }
     }
 
+
     public void markEntryNow() {
         this.entry = LocalDateTime.now();
         this.exit = null;
     }
 
     public void markExitNow() {
+        if (this.entry == null) {
+            throw new VehiclePlateNotFoundException("Não existe entrada registrada.");
+        }
+
         this.exit = LocalDateTime.now();
+
+        Duration stay = Duration.between(this.entry, this.exit);
+
+        this.addAccumulated(stay);
+
+        BigDecimal cost = calculateCost(stay);
+
+        this.pending = this.pending.add(cost);
     }
 
     public Duration currentVisitDuration() {
@@ -73,6 +87,7 @@ public class VehicleDomain {
         LocalDateTime stop = (this.exit != null) ? this.exit : LocalDateTime.now();
         return Duration.between(this.entry, stop);
     }
+
 
     public void addAccumulated(Duration d) {
         if (d != null) {
@@ -84,22 +99,51 @@ public class VehicleDomain {
         this.accumulatedTime = Duration.ZERO;
     }
 
-    public void clearEntryExit() {
-        this.entry = null;
-        this.exit = null;
+
+    private BigDecimal calculateCost(Duration stay) {
+        if (stay == null || stay.isZero() || stay.isNegative()) {
+            return BigDecimal.ZERO;
+        }
+
+        long minutes = stay.toMinutes();
+
+        if (minutes <= 0) minutes = 1;
+
+        BigDecimal rate = switch (this.type) {
+            case RESIDENTS -> BigDecimal.ZERO;
+            case OFFICIAL -> BigDecimal.ZERO;
+            case NORESIDENTS -> new BigDecimal("0.50");
+        };
+
+        return rate.multiply(BigDecimal.valueOf(minutes));
     }
 
-    public void setPending(BigDecimal pending) {
-        this.pending = pending == null ? BigDecimal.ZERO : pending;
+
+    public boolean isResident() {
+        return this.type == TypesVehicles.RESIDENTS;
+    }
+
+    public boolean isOfficial() {
+        return this.type == TypesVehicles.OFFICIAL;
+    }
+
+    public void increaseParkingTimeForMonthStart(Duration bonusDuration) {
+        if (this.isResident()) {
+            this.addAccumulated(bonusDuration);
+        }
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
     public String getPlate() { return plate; }
     public LocalDateTime getEntry() { return entry; }
     public LocalDateTime getExit() { return exit; }
     public Duration getAccumulatedTime() { return accumulatedTime; }
     public BigDecimal getPending() { return pending; }
     public TypesVehicles getType() { return type; }
+
     public void setType(TypesVehicles t) { this.type = t; }
+
+    public void setPending(BigDecimal pending) {
+        this.pending = pending == null ? BigDecimal.ZERO : pending;
+    }
 }
