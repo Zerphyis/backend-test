@@ -5,6 +5,7 @@ import dev.Zerphyis.ParkTest.Infra.EntityCore.VehicleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface VehicleRepositoryJpa extends JpaRepository<VehicleEntity, Long>
 
     @Modifying
     @Transactional
-    @Query("UPDATE VehicleEntity v SET v.accumulatedTimeSeconds = 0, v.pending = 0 WHERE v.type = 'OFFICIAL'")
-    void resetOfficialVehiclesMonth();
+    @Query("DELETE FROM VehicleEntity v WHERE v.id = :vehicleId")
+    void deleteByIdCustom(@Param("vehicleId") Long vehicleId);
+
+
 }

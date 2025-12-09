@@ -28,12 +28,12 @@ public class VehicleMapper {
 
         return new VehicleDomain(
                 e.getId(),
-                e.getPlate() == null ? "" : e.getPlate(),
+                e.getPlate(),
                 type,
                 e.getEntry(),
                 e.getExit(),
                 e.getAccumulatedTime(),
-                e.getPendingSafe()
+                e.getPending()
         );
     }
 }

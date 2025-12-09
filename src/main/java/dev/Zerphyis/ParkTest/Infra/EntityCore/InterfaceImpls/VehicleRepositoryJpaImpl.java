@@ -50,8 +50,14 @@ public class VehicleRepositoryJpaImpl implements VehicleRepository {
         return VehicleMapper.toDomain(saved);
     }
 
+
+
     @Override
-    public void resetOfficialVehiclesMonth() {
-        jpa.resetOfficialVehiclesMonth();
+    public void deleteStationsByVehicle(Long vehicleId) {
+        if (vehicleId == null) {
+            return;
+        }
+
+        jpa.deleteByIdCustom(vehicleId);
     }
 }
