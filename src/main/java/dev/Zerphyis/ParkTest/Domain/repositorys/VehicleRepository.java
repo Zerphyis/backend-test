@@ -16,5 +16,6 @@ public interface VehicleRepository {
 
     VehicleDomain save(VehicleDomain vehicle);
 
-    void resetOfficialVehiclesMonth();
+
+    void deleteStationsByVehicle(Long vehicleId);
 }
