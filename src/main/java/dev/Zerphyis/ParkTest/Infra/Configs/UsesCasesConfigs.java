@@ -3,8 +3,10 @@ package dev.Zerphyis.ParkTest.Infra.Configs;
 import dev.Zerphyis.ParkTest.Aplication.Service.ParkingService;
 import dev.Zerphyis.ParkTest.Aplication.UseCases.*;
 import dev.Zerphyis.ParkTest.Domain.Interfaces.ResidentPaymentRepository;
+import dev.Zerphyis.ParkTest.Domain.Interfaces.StationInterface;
 import dev.Zerphyis.ParkTest.Domain.repositorys.VehicleRepository;
 import dev.Zerphyis.ParkTest.Domain.repositorys.jpa.VehicleRepositoryJpa;
+import dev.Zerphyis.ParkTest.Infra.EntityCore.InterfaceImpls.StationInterfaceImpl;
 import dev.Zerphyis.ParkTest.Infra.EntityCore.InterfaceImpls.VehicleRepositoryJpaImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +20,13 @@ public class UsesCasesConfigs {
     }
 
     @Bean
-    public RegisterExit registerExit(VehicleRepository repository) {
+    public RegisterExit registerExit(VehicleRepository repository ) {
         return new RegisterExit(repository);
     }
 
     @Bean
-    public StartMonth startMonth(VehicleRepository repository) {
-        return new StartMonth(repository);
+    public StartMonth startMonth(VehicleRepository repository, StationInterface stationService) {
+        return new StartMonth(repository,stationService);
     }
 
     @Bean
@@ -40,6 +42,11 @@ public class UsesCasesConfigs {
     @Bean
     public AddOfficialVehicle addOfficialVehicle(VehicleRepository repository) {
         return new AddOfficialVehicle(repository);
+    }
+
+    @Bean
+    public StationInterface stationinterface(VehicleRepository stationRepository) {
+        return new StationInterfaceImpl(stationRepository);
     }
 
     @Bean
@@ -90,5 +97,6 @@ public class UsesCasesConfigs {
                 generateReport
         );
     }
+
 
 }
