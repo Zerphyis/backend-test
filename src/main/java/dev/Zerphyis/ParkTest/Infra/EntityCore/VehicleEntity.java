@@ -35,7 +35,8 @@ public class VehicleEntity {
 
     private Long accumulatedTimeSeconds;
 
-    private BigDecimal pending;
+    @Column(nullable = false)
+    private BigDecimal pending = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private TypesVehicles type;
@@ -54,9 +55,5 @@ public class VehicleEntity {
 
     public void setAccumulatedTime(Duration d) {
         this.accumulatedTimeSeconds = (d == null ? 0 : d.getSeconds());
-    }
-
-    public BigDecimal getPendingSafe() {
-        return pending == null ? BigDecimal.ZERO : pending;
     }
 }
