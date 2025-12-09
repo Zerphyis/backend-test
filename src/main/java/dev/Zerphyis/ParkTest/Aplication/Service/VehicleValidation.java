@@ -15,37 +15,27 @@ public class VehicleValidation {
         this.repository = repository;
     }
 
-    /**
-     * Regras finais:
-     *
-     * - Se NÃO existir → permitido.
-     * - Se existir como NORESIDENTS → permitido (pois é o valor padrão).
-     * - Se existir com o MESMO tipo → permitido.
-     * - Se existir com OUTRO tipo → lançar PlateExistOtherList.
-     */
+
     public void assertPlateNotExists(String plate, TypesVehicles newType) {
         String normalized = plate.toUpperCase();
 
         Optional<VehicleDomain> existing = repository.findByPlate(normalized);
 
         if (existing.isEmpty()) {
-            return; // placa não existe: permitido
+            return;
         }
 
         VehicleDomain vehicle = existing.get();
         TypesVehicles currentType = vehicle.getType();
 
-        // Se o tipo atual é NORESIDENTS → pode migrar para qualquer tipo
         if (currentType.equals(TypesVehicles.NORESIDENTS)) {
             return;
         }
 
-        // Se é o mesmo tipo → permitido
         if (currentType.equals(newType)) {
             return;
         }
 
-        // Caso exista com outro tipo diferente → proibido
         throw new PlateExistOtherList(
                 "A placa '" + normalized + "' já está cadastrada como " + currentType + "."
         );
