@@ -1,6 +1,5 @@
 package dev.Zerphyis.ParkTest.Infra.Configs.filtersLimiter;
 
-import dev.Zerphyis.ParkTest.Infra.Configs.filtersLimiter.RateLimiterInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,13 +18,7 @@ public class WebConfigLimiter implements WebMvcConfigurer {
 
         registry.addInterceptor(rateLimiterInterceptor)
                 .order(1)
-                .addPathPatterns(
-                        "/parking/entry/**",
-                        "/parking/exit/**",
-                        "/parking/residents/**",
-                        "/parking/officials/**",
-                        "/parking/**"
-                )
+                .addPathPatterns("/parking/**")
                 .excludePathPatterns("/error");
     }
 }
