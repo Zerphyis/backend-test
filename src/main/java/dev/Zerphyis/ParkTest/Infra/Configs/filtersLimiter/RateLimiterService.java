@@ -12,25 +12,27 @@ public class RateLimiterService {
     private final Map<String, Bucket> bucketCache = new ConcurrentHashMap<>();
     private final Map<String, Bandwidth> policies;
 
-    public RateLimiterService(Map<String, Bandwidth> policies) {
-        this.policies = policies;
+    public RateLimiterService(Map<String, Bandwidth> rateLimiterPolicies) {
+        this.policies = rateLimiterPolicies;
     }
 
-    private Bucket createBucket(String policy) {
+    private Bucket createBucket(String policyKey) {
+        Bandwidth limit = policies.getOrDefault(policyKey, policies.get("DEFAULT_POLICY"));
         return Bucket.builder()
-                .addLimit(policies.get(policy))
+                .addLimit(limit)
                 .build();
     }
 
-    private Bucket resolveBucket(String ip, String policy) {
-        String key = ip + "::" + policy;
-        return bucketCache.computeIfAbsent(key, k -> createBucket(policy));
+    private Bucket resolveBucket(String ip, String policyKey) {
+        String key = ip + "::" + policyKey;
+        return bucketCache.computeIfAbsent(key, k -> createBucket(policyKey));
     }
 
-    public RateLimitResult tryConsume(String ip, String policy) {
-        Bucket bucket = resolveBucket(ip == null ? "local" : ip, policy);
+    public RateLimitResult tryConsume(String ip, String policyKey) {
+        Bucket bucket = resolveBucket(ip == null ? "unknown" : ip, policyKey);
 
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
+
 
         if (probe.isConsumed()) {
             return new RateLimitResult(true, 0);
