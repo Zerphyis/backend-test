@@ -1,6 +1,5 @@
 package dev.Zerphyis.ParkTest.Infra.Configs.filtersLimiter;
 
-
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Refill;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +18,7 @@ public class RaterLimiterPolicesConfig {
                 "EXIT_POLICY", Bandwidth.classic(10, Refill.intervally(10, Duration.ofMinutes(1))),
                 "RESIDENT_POLICY", Bandwidth.classic(20, Refill.intervally(20, Duration.ofMinutes(1))),
                 "OFFICIAL_POLICY", Bandwidth.classic(15, Refill.intervally(15, Duration.ofMinutes(1))),
-                "DEFAULT", Bandwidth.classic(60, Refill.intervally(60, Duration.ofMinutes(1)))
+                "DEFAULT_POLICY", Bandwidth.classic(60, Refill.intervally(60, Duration.ofMinutes(1)))
         );
     }
 }
-
